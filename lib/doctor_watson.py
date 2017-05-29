@@ -1,13 +1,16 @@
 # coding=utf-8
 from watson_developer_cloud import TextToSpeechV1
+from lib.log import get_logger
 
 
 class WatsonApi():
 
     def __init__(self, username, password):
+        self.log = get_logger(context='Doctor Watson')
         self.tts_api = TextToSpeechV1(username=username, password=password, x_watson_learning_opt_out=True)
+        self.log.info('Init successful')
 
-    def synthesize_speach(self, text, output_file, voice="en-US_AllisonVoice"):
+    def synthesize_speech(self, text, output_file, voice="en-US_AllisonVoice"):
         '''
         Make audio file from text
         :param text: str. Text from which speach whould be synthesize
@@ -17,6 +20,7 @@ class WatsonApi():
         '''
         with open(output_file, 'wb') as audio_file:
             audio_file.write(self.tts_api.synthesize(text, accept='audio/wav', voice=voice))
+            self.log.info('Synthesize speech complete')
 
     def get_voices(self, language=None, gender=None):
         '''
